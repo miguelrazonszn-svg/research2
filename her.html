@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HEMLO ITS A PRANK</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Floating Hearts Background */
+        .hearts-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .heart {
+            position: absolute;
+            bottom: -100px;
+            animation: floatUp linear infinite;
+            opacity: 0.6;
+            font-size: 20px;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Main Container */
+        .container {
+            text-align: center;
+            z-index: 10;
+            padding: 40px;
+            max-width: 800px;
+            width: 90%;
+        }
+
+        /* Title */
+        .title {
+            color: #fff;
+            font-size: 3rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+            animation: fadeInDown 1s ease-out;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Music Player */
+        .music-player {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: fadeIn 1.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .music-title {
+            color: #fff;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            font-style: italic;
+        }
+
+        .audio-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .play-btn {
+            background: linear-gradient(135deg, #e94560, #ff6b6b);
+            border: none;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 5px 20px rgba(233, 69, 96, 0.4);
+        }
+
+        .play-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 30px rgba(233, 69, 96, 0.6);
+        }
+
+        .play-btn svg {
+            width: 24px;
+            height: 24px;
+            fill: white;
+            margin-left: 3px;
+        }
+
+        .play-btn.playing svg {
+            margin-left: 0;
+        }
+
+        .progress-container {
+            width: 200px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #e94560, #ff6b6b);
+            width: 0%;
+            transition: width 0.1s;
+        }
+
+        /* Text Placeholder */
+        .message-container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(5px);
+            border-radius: 20px;
+            padding: 40px;
+            margin-top: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: fadeIn 2s ease-out;
+        }
+
+        .message-title {
+            color: #e94560;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .message-text {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1rem;
+            line-height: 1.8;
+            font-style: italic;
+        }
+
+        .editable-text {
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.9);
+            font-family: 'Georgia', serif;
+            font-size: 1.1rem;
+            font-style: italic;
+            width: 100%;
+            min-height: 100px;
+            resize: none;
+            outline: none;
+            text-align: center;
+            line-height: 1.8;
+        }
+
+        .editable-text::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* Decorative Elements */
+        .decorative-line {
+            width: 100px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #e94560, transparent);
+            margin: 20px auto;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .title {
+                font-size: 2rem;
+            }
+            
+            .audio-controls {
+                flex-direction: column;
+            }
+            
+            .progress-container {
+                width: 150px;
+            }
+        }
+
+        /* Note for user */
+        .user-note {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(233, 69, 96, 0.8);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            z-index: 100;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Hearts -->
+    <div class="hearts-container" id="heartsContainer"></div>
+
+    <!-- Note about audio -->
+    <div class="user-note">
+        Note: stawp laughing :(
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <h1 class="title">HEMLO ITS A PRANK</h1>
+        
+        <!-- Music Player -->
+        <div class="music-player">
+            <p class="music-title">Seasons: - Wave to Earth</p>
+            <p class="music-lyrics">
+                But I'll pray for you all the time
+                If I could be by your side
+                I'll give you all my life my seasons</p>
+            <div class="audio-controls">
+                <button class="play-btn" id="playBtn" onclick="toggleMusic()">
+                    <svg id="playIcon" viewBox="0 0 24 24">
+                        <path d="M8 5v14l11-7z"/>
+                    </svg>
+                </button>
+                <div class="progress-container">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Message Placeholder -->
+        <div class="message-container">
+            <h2 class="message-title">Meow</h2>
+            <div class="decorative-line"></div>
+            <textarea 
+                class="editable-text" 
+                id="messageText"
+                placeholder="h, hi, hii sleepyhead 
+
+Song of Solomon 4:9
+“You have made my heart beat faster, my sister, my bride; You have made my heart beat faster with a single glance of your eyes, With a single strand of your necklace.”
+
+Before I say anything else, I just want to thank you for being so kind. It’s funny how we started talking and all the landian we had. You have no idea how much I like you.
+At first, I thought it was just a happy crush, but I ended up falling for you really deeply. honestly, I’ve been thinking about us a lot. No pressure, I just want to be clear about my   intentions. I’m willing to pursue you properly even doe im torpe hehe.
+
+I also want you to know that whenever things get heavy, you can always talk to me. I might not be the best with words or comforting, but I’ll always be here for you, especially at your lowest. And yes, I can buy you cookies and cream.
+
+Just a reminder: I hope you never forget to take care of yourself and love yourself the same way you do for others. 
+ 
+TS SO NOT ME OKE STAWP LAUGHING"
+            ></textarea>
+        </div>
+    </div>
+
+    <!-- Audio Element -->
+    <audio id="audioPlayer" loop>
+        <!-- Replace the src with your music file URL -->
+        <source src="c:\Users\jomar\Downloads\her\wave to earth - seasons [CnVVjLOGVoY].mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <script>
+        // Create floating hearts
+        function createHearts() {
+            const container = document.getElementById('heartsContainer');
+            const heartSymbols = ['❤️', '💕', '💗', '💖', '💓', '💘'];
+            
+            for (let i = 0; i < 30; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.innerHTML = heartSymbols[Math.floor(Math.random() * heartSymbols.length)];
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                heart.style.animationDelay = Math.random() * 10 + 's';
+                heart.style.fontSize = (Math.random() * 20 + 15) + 'px';
+                container.appendChild(heart);
+            }
+        }
+
+        // Music Player Functions
+        const audio = document.getElementById('audioPlayer');
+        const playBtn = document.getElementById('playBtn');
+        const playIcon = document.getElementById('playIcon');
+        const progressBar = document.getElementById('progressBar');
+        let isPlaying = false;
+
+        function toggleMusic() {
+            if (isPlaying) {
+                audio.pause();
+                playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>';
+                playBtn.classList.remove('playing');
+            } else {
+                audio.play();
+                playIcon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
+                playBtn.classList.add('playing');
+            }
+            isPlaying = !isPlaying;
+        }
+
+        // Update progress bar
+        audio.addEventListener('timeupdate', () => {
+            const progress = (audio.currentTime / audio.duration) * 100;
+            progressBar.style.width = progress + '%';
+        });
+
+        // Reset when song ends
+        audio.addEventListener('ended', () => {
+            isPlaying = false;
+            playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>';
+            playBtn.classList.remove('playing');
+            progressBar.style.width = '0%';
+        });
+
+        // Save message to localStorage
+        const messageText = document.getElementById('messageText');
+        messageText.value = localStorage.getItem('girlfriendMessage') || '';
+        
+        messageText.addEventListener('input', () => {
+            localStorage.setItem('girlfriendMessage', messageText.value);
+        });
+
+        // Initialize
+        createHearts();
+    </script>
+</body>
+</html>
